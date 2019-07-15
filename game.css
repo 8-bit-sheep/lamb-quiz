@@ -1,0 +1,120 @@
+.choice-container {
+    display: flex;
+    margin-bottom: 0.5rem;
+    width: 100%;
+    font-size: 1.8rem;
+    border: 0.1rem solid #7badb6;
+    background-color: white;
+}
+
+.choice-text {
+  padding: 1.5rem;
+  width: 100%;
+}
+
+.choice-container:hover {
+  cursor: pointer;
+  box-shadow: 0 0.4rem 1rem 0 rgba(123, 173, 182, 0.5);
+  transform: translateY(-0.1rem);
+  transition: transform 150ms;
+}
+
+.choice-prefix {
+  padding: 1.5rem 2.5rem;
+  background-color: #7badb6;
+  color: white;
+}
+
+.incorrect {
+  background-color: #f3a9b5;
+}
+
+.correct {
+  background-color: #92bd6c;
+}
+
+/* hud */
+
+#hud {
+  display: flex;
+  justify-content: space-between;
+}
+
+.hud-prefix {
+  text-align: center;
+  font-size: 2rem;
+}
+
+.hud-main-text {
+  text-align: center;
+}
+
+.episode-info {
+    width: 100%;
+    padding: 1rem 2rem;
+    text-align: center;
+    font-family: "Times New Roman", Times, serif;
+}
+
+#episodeName:hover {
+  cursor: pointer;
+  color: #a9431e;
+  transform: translateY(-0.1rem);
+  transition: transform 150ms;
+}
+
+/* loader */
+
+#loader {
+  border: 1.6rem solid white;
+  border-top: 1.6rem solid #7badb6;
+  border-radius: 50%;
+  width: 12rem;
+  height: 12rem;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* segment box */
+
+#segment-buttons {
+  list-style: none;
+}
+
+.segment-btn,
+.all-btn {
+    font-size: 1.8rem;
+    font-weight: 500;
+    background-color: white;
+    border: 0.1rem solid #7badb6;
+    box-shadow: none;
+    color: #a9431e;
+    padding: 1rem;
+    width: 100%;
+    text-align: left;
+}
+
+.segment-btn {
+    margin-top: 0.25rem;
+}
+
+#all-btns {
+    padding: 0rem;
+    border-width: 0rem;
+    list-style: none;
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+.segment-btn:hover {
+    color: #a9431e;
+}
+
