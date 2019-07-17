@@ -20,17 +20,23 @@ finalScore.innerText = mostRecentScore;
 playAgainButton.href = "game.html?contentId=" + urlParams.contentId;
 
 const saveHighscore = e => {
-  e.preventDefault();
-  const currentScore = {
-    score: mostRecentScore,
-    name: username.value
-  };
-  highscores.push(currentScore);
-  highscores.sort((x, y) => y.score - x.score);
-  highscores.splice(MAX_HIGHSCORES);
-  localStorage.setItem(
-    "highscores" + urlParams.contentId,
-    JSON.stringify(highscores)
+    e.preventDefault();
+    const rankingUrl = `https://script.google.com/macros/s/AKfycbwdGGPzI9JdH_6FN-na4boXQNZmGyv6y_690ErJc0Xhzd_CQ4A_/exec?gameId=${urlParams.contentId}&score=${mostRecentScore}&name=${username.value}`
+
+    fetch(rankingUrl).
+        then(res => console.log(res));
+             
+    const currentScore = {
+        score: mostRecentScore,
+        name: username.value
+    };
+    highscores
+                .push(currentScore)
+                .sort((x, y) => y.score - x.score)
+                .splice(MAX_HIGHSCORES);
+    localStorage.setItem(
+        "highscores" + urlParams.contentId,
+        JSON.stringify(highscores)
   );
   window.location.assign("highscores.html?contentId=" + urlParams.contentId);
 };
