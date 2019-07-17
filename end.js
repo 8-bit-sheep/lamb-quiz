@@ -25,7 +25,9 @@ const saveHighscore = e => {
     score: mostRecentScore,
     name: username.value
   };
-  highscores.push(currentScore);
+    const rankingUrl = `https://script.google.com/macros/s/AKfycbwdGGPzI9JdH_6FN-na4boXQNZmGyv6y_690ErJc0Xhzd_CQ4A_/exec?gameId=${urlParams.contentId}&score=${mostRecentScore}&name=${username.value}`;
+    fetch(rankingUrl);
+    highscores.push(currentScore);
   highscores.sort((x, y) => y.score - x.score);
   highscores.splice(MAX_HIGHSCORES);
   localStorage.setItem(
