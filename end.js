@@ -12,29 +12,17 @@ const saveScoreBtn = document.getElementById("saveScoreButton");
 const urlParams = parseUrlParameters(window.location.search);
 const playAgainButton = document.getElementById("again-button");
 
-const highscores =
-  JSON.parse(localStorage.getItem("highscores" + urlParams.contentId)) || [];
-const MAX_HIGHSCORES = 5;
-
 finalScore.innerText = mostRecentScore;
 playAgainButton.href = "game.html?contentId=" + urlParams.contentId;
 
 const saveHighscore = e => {
   e.preventDefault();
-  const currentScore = {
-    score: mostRecentScore,
-    name: username.value
-  };
-    const rankingUrl = `https://script.google.com/macros/s/AKfycbwdGGPzI9JdH_6FN-na4boXQNZmGyv6y_690ErJc0Xhzd_CQ4A_/exec?gameId=${urlParams.contentId}&score=${mostRecentScore}&name=${username.value}`;
-    fetch(rankingUrl);
-    highscores.push(currentScore);
-  highscores.sort((x, y) => y.score - x.score);
-  highscores.splice(MAX_HIGHSCORES);
-  localStorage.setItem(
-    "highscores" + urlParams.contentId,
-    JSON.stringify(highscores)
-  );
-  window.location.assign("highscores.html?contentId=" + urlParams.contentId);
+ 
+  const rankingUrl = `https://script.google.com/macros/s/AKfycbwdGGPzI9JdH_6FN-na4boXQNZmGyv6y_690ErJc0Xhzd_CQ4A_/exec?contentId=${urlParams.contentId}&score=${mostRecentScore}&name=${username.value}`;
+  fetch(rankingUrl)
+  setInterval(() => window.location.assign("highscores.html?contentId=" + urlParams.contentId+"&name=" + username.value + "&score="+mostRecentScore), 0);
+ 
+  
 };
 
 if (urlParams.all === "1") {

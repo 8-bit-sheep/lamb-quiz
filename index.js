@@ -6,7 +6,9 @@ d3.csv(
 ).then(data => {
   getData(data);
 });
-
+const contentTitles = [
+  ...new Set(questions.map(question => question.content))
+];
 const getData = questions => {
   const contentTitles = [
     ...new Set(questions.map(question => question.content))

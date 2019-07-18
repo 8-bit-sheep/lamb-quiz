@@ -24,7 +24,7 @@ let cont = false;
 let maxQuestions = 20;
 let isSegmentGame = false;
 
-// state
+// config
 const CORRECT_BONUS = 10;
 
 const startGame = () => {
@@ -65,12 +65,12 @@ const createButtonInsideListItem = (list, text) => {
   const button = document.createElement("button");
   li.appendChild(button);
   button.innerText = text;
-    if(text === "Play All!") {
-        button.classList.add("all-btn");
-    } else {
-        button.classList.add("segment-btn");        
-    }
-    button.addEventListener("click", startSegmentGame);
+  if (text === "Play All!") {
+    button.classList.add("all-btn");
+  } else {
+    button.classList.add("segment-btn");
+  }
+  button.addEventListener("click", startSegmentGame);
 };
 
 const startSegmentGame = e => {
@@ -139,6 +139,49 @@ const continueGame = () => {
   } else return;
 };
 
+AA = (selectedAnswer, selectedChoice) => {
+  const classToApply =
+    selectedAnswer === currentQuestion.answer ? "correct" : "incorrect";
+
+  if (classToApply === "correct") {
+    incrementScore(CORRECT_BONUS);
+  }
+  selectedChoice.parentElement.classList.add(classToApply);
+
+  if (classToApply === "correct") {
+    setTimeout(() => {
+      selectedChoice.parentElement.classList.remove(classToApply);
+      getNewQuestion();
+    }, 500);
+  } else {
+    acceptingAnswers = false;
+    wrongAnswer();
+  }
+}
+
+const keyboardMap = {
+  49: "1",
+  50: "2",
+  51: "3",
+  52: "4"
+}
+
+const keypress = kp => {
+  if (!acceptingAnswers | cont) return;
+  choices.forEach(choice => {
+    if (choice.dataset["number"] === keyboardMap[kp]) {
+      selectedChoice = choice;
+    }
+  });
+
+  console.log(keyboardMap[kp])
+  AA(keyboardMap[kp], selectedChoice)
+
+
+}
+
+document.onkeyup = (e => keypress(e.which))
+
 document.body.addEventListener("click", e => continueGame());
 
 choices.forEach(choice => {
@@ -147,25 +190,11 @@ choices.forEach(choice => {
     acceptinganswers = false;
     const selectedChoice = e.target;
     const selectedAnswer = selectedChoice.dataset["number"];
-    const classToApply =
-      selectedAnswer === currentQuestion.answer ? "correct" : "incorrect";
-
-    if (classToApply === "correct") {
-      incrementScore(CORRECT_BONUS);
-    }
-    selectedChoice.parentElement.classList.add(classToApply);
-
-    if (classToApply === "correct") {
-      setTimeout(() => {
-        selectedChoice.parentElement.classList.remove(classToApply);
-        getNewQuestion();
-      }, 500);
-    } else {
-      acceptingAnswers = false;
-      wrongAnswer();
-    }
+    AA(selectedAnswer, selectedChoice);
   });
 });
+
+
 
 const incrementScore = num => {
   score += num;
