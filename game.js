@@ -16,11 +16,11 @@ const segmentButtons = document.getElementById("segment-buttons");
 // state
 let currentQuestion = {};
 let acceptingAnswers = false;
+let continueToNext = false;
 let score = 0;
 let questionCounter = 0;
 let availableQuestions = [];
 let questions = [];
-let cont = false;
 let maxQuestions = 20;
 let isSegmentGame = false;
 
@@ -91,7 +91,7 @@ const startSegmentGame = e => {
 };
 
 const getNewQuestion = () => {
-  cont = false;
+  continueToNext = false;
   if (availableQuestions.length === 0 || questionCounter > maxQuestions - 1) {
     localStorage.setItem("mostRecentScore", score);
     if (isSegmentGame === false) {
@@ -125,12 +125,12 @@ const wrongAnswer = () => {
         choice.parentElement.classList.add("correct");
       }
     });
-    cont = true;
+    continueToNext = true;
   }, 200);
 };
 
 const continueGame = () => {
-  if (cont) {
+  if (continueToNext) {
     choices.forEach(choice => {
       choice.parentElement.classList.remove(["incorrect"]);
       choice.parentElement.classList.remove(["correct"]);
@@ -139,7 +139,7 @@ const continueGame = () => {
   } else return;
 };
 
-AA = (selectedAnswer, selectedChoice) => {
+checkChoice = (selectedAnswer, selectedChoice) => {
   const classToApply =
     selectedAnswer === currentQuestion.answer ? "correct" : "incorrect";
 
@@ -167,17 +167,18 @@ const keyboardMap = {
 }
 
 const keypress = kp => {
-  if (!acceptingAnswers | cont) return;
-  choices.forEach(choice => {
-    if (choice.dataset["number"] === keyboardMap[kp]) {
-      selectedChoice = choice;
-    }
-  });
-
-  console.log(keyboardMap[kp])
-  AA(keyboardMap[kp], selectedChoice)
-
-
+  if (!acceptingAnswers | continueToNext) {
+    continueGame();
+  } else {
+    choices.forEach(choice => {
+      if (choice.dataset["number"] === keyboardMap[kp]) {
+        selectedChoice = choice;
+      }
+    });
+  
+    console.log(keyboardMap[kp])
+    checkChoice(keyboardMap[kp], selectedChoice)  
+  }
 }
 
 document.onkeyup = (e => keypress(e.which))
@@ -186,7 +187,7 @@ document.body.addEventListener("click", e => continueGame());
 
 choices.forEach(choice => {
   choice.addEventListener("click", e => {
-    if (!acceptingAnswers | cont) return;
+    if (!acceptingAnswers | continueToNext) return;
     acceptinganswers = false;
     const selectedChoice = e.target;
     const selectedAnswer = selectedChoice.dataset["number"];
