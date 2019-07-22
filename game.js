@@ -191,7 +191,7 @@ choices.forEach(choice => {
     acceptinganswers = false;
     const selectedChoice = e.target;
     const selectedAnswer = selectedChoice.dataset["number"];
-    AA(selectedAnswer, selectedChoice);
+      checkChoice(selectedAnswer, selectedChoice);
   });
 });
 
