@@ -20,3 +20,29 @@ d3.csv(
     ""
   );
 });
+const username = document.getElementById("username");
+const submitBtn = document.getElementById("submitBtn");
+const question = document.getElementById("question");
+const choice1 = document.getElementById("choice1");
+const choice2 = document.getElementById("choice2");
+const choice3 = document.getElementById("choice3");
+const choice4 = document.getElementById("choice4");
+const answer = document.getElementById("answer");
+
+filledForm = () =>
+  !(
+    username.value &&
+    answer.value !== "choose" &&
+    question.value &&
+    choice1.value &&
+    choice2.value &&
+    choice3.value &&
+    choice4.value
+  );
+username.addEventListener("keyup", () => (submitBtn.disabled = filledForm()));
+question.addEventListener("keyup", () => (submitBtn.disabled = filledForm()));
+choice1.addEventListener("keyup", () => (submitBtn.disabled = filledForm()));
+choice2.addEventListener("keyup", () => (submitBtn.disabled = filledForm()));
+choice3.addEventListener("keyup", () => (submitBtn.disabled = filledForm()));
+choice4.addEventListener("keyup", () => (submitBtn.disabled = filledForm()));
+answer.onchange = () => (submitBtn.disabled = filledForm());
