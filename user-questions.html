@@ -11,12 +11,8 @@
     <div class="container">
       <div id="userGenerated" class="flex-center flex-column">
         <h1>Your Question Contribution</h1>
-        <h3 id="brief">
-          Before we start, please contribute one question from Crash Course
-          Computer Scinece. What is the most surprising piece of information
-          that you want people to learn?
-        </h3>
-        <form>
+        <h3 id="brief"></h3>
+        <form name="questionEntry">
           <input
             type="text"
             name="username"
@@ -25,6 +21,7 @@
           />
           <h3>Choose segment</h3>
           <select id="contentSelector" name="contentSegment"> </select>
+
           <h3>The question</h3>
           <input
             type="text"
@@ -72,7 +69,7 @@
             type="submit"
             value="Submit"
             id="submitBtn"
-            onclick="submitForm(event)"
+            onclick="saveQuestion(event)"
             disabled
           >
             Submit

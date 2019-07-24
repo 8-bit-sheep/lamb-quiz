@@ -1,3 +1,9 @@
+const parseUrlParameters = parameter =>
+  parameter //"?key1=value1&key2=value2&key3=value3"
+    .substr(1) //"key1=value1&key2=value2&key3=value3"
+    .split("&") //["key1=value1" "key2=value2" key3=value3"]
+    .map(el => el.split("=")) //[["key1" "value1"] ["key2" "value2"] [key3" "value3"]]
+    .reduce((acc, cur) => ({ ...acc, [cur[0]]: cur[1] }), {});
 // dom references
 
 const loader = document.getElementById("loader");
@@ -9,7 +15,9 @@ const scoreText = document.getElementById("score");
 const episodeNameText = document.getElementById("episodeName");
 const contentNameText = document.getElementById("contentName");
 const urlNameText = document.getElementById("episodeurl");
-const id = window.location.search.split("=")[1];
+const params = parseUrlParameters(window.location.search);
+const contentId = params.contentId;
+const contributed = params.contributed;
 const segmentBox = document.getElementById("segment-index");
 const segmentButtons = document.getElementById("segment-buttons");
 
@@ -28,11 +36,13 @@ let isSegmentGame = false;
 const CORRECT_BONUS = 10;
 
 const startGame = () => {
+  if (!contributed && contentId !== "0")
+    window.location.assign("user-questions.html?contentId=" + contentId);
   questionCounter = 0;
   score = 0;
   scoreText.innerText = score;
   loader.classList.add("hidden");
-  if (id === "0") {
+  if (contentId === "0") {
     game.classList.remove("hidden");
     availableQuestions = [...questions];
     maxQuestions = 50;
@@ -95,9 +105,11 @@ const getNewQuestion = () => {
   if (availableQuestions.length === 0 || questionCounter > maxQuestions - 1) {
     localStorage.setItem("mostRecentScore", score);
     if (isSegmentGame === false) {
-      return window.location.assign("end.html?contentId=" + id + "&all=1");
+      return window.location.assign(
+        "end.html?contentId=" + contentId + "&all=1"
+      );
     } else {
-      return window.location.assign("end.html?contentId=" + id);
+      return window.location.assign("end.html?contentId=" + contentId);
     }
   }
 
@@ -157,14 +169,14 @@ checkChoice = (selectedAnswer, selectedChoice) => {
     acceptingAnswers = false;
     wrongAnswer();
   }
-}
+};
 
 const keyboardMap = {
   49: "1",
   50: "2",
   51: "3",
   52: "4"
-}
+};
 
 const keypress = kp => {
   if (!acceptingAnswers | continueToNext) {
@@ -175,13 +187,13 @@ const keypress = kp => {
         selectedChoice = choice;
       }
     });
-  
-    console.log(keyboardMap[kp])
-    checkChoice(keyboardMap[kp], selectedChoice)  
-  }
-}
 
-document.onkeyup = (e => keypress(e.which))
+    console.log(keyboardMap[kp]);
+    checkChoice(keyboardMap[kp], selectedChoice);
+  }
+};
+
+document.onkeyup = e => keypress(e.which);
 
 document.body.addEventListener("click", e => continueGame());
 
@@ -191,11 +203,9 @@ choices.forEach(choice => {
     acceptinganswers = false;
     const selectedChoice = e.target;
     const selectedAnswer = selectedChoice.dataset["number"];
-      checkChoice(selectedAnswer, selectedChoice);
+    checkChoice(selectedAnswer, selectedChoice);
   });
 });
-
-
 
 const incrementScore = num => {
   score += num;
@@ -206,8 +216,8 @@ d3.csv(
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vSfBk-rwrIauBPn7iuoLXBxP2sSYOXRYCbJ2GflzSK6wxGVGDr_fAqORJ0JWPdajFLxnGegmrlI26HB/pub?output=csv"
 ).then(data => {
   questions = data.filter(question => {
-    if (id === "0") return true;
-    else return question.contentId === id;
+    if (contentId === "0") return true;
+    else return question.contentId === contentId;
   });
   startGame();
 });

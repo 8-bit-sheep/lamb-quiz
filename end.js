@@ -17,12 +17,23 @@ playAgainButton.href = "game.html?contentId=" + urlParams.contentId;
 
 const saveHighscore = e => {
   e.preventDefault();
- 
-  const rankingUrl = `https://script.google.com/macros/s/AKfycbwdGGPzI9JdH_6FN-na4boXQNZmGyv6y_690ErJc0Xhzd_CQ4A_/exec?contentId=${urlParams.contentId}&score=${mostRecentScore}&name=${username.value}`;
-  fetch(rankingUrl)
-  setInterval(() => window.location.assign("highscores.html?contentId=" + urlParams.contentId+"&name=" + username.value + "&score="+mostRecentScore), 0);
- 
-  
+
+  const rankingUrl = `https://script.google.com/macros/s/AKfycbwdGGPzI9JdH_6FN-na4boXQNZmGyv6y_690ErJc0Xhzd_CQ4A_/exec?contentId=${
+    urlParams.contentId
+  }&score=${mostRecentScore}&name=${username.value}`;
+  fetch(rankingUrl);
+  setInterval(
+    () =>
+      window.location.assign(
+        "highscores.html?contentId=" +
+          urlParams.contentId +
+          "&name=" +
+          username.value +
+          "&score=" +
+          mostRecentScore
+      ),
+    0
+  );
 };
 
 if (urlParams.all === "1") {
