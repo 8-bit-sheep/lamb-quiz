@@ -3,6 +3,12 @@ d3.csv(
 ).then(data => {
   const contentId = window.location.search.substr(1).split("=")[1];
   const urlLink = data.filter(x => x.contentId === contentId)[0].url;
+  const loader = document.getElementById("loader");
+  const contributionForm = document.getElementById("contributionForm");
+  const startForm = () => {
+    loader.classList.add("hidden");
+    contributionForm.classList.remove("hidden");
+  };
   const contentSegments = [
     ...new Set(
       data.filter(el => el.contentId === contentId).map(e => e.contentSegment)
@@ -16,12 +22,17 @@ d3.csv(
     questionCriteria[[Math.floor(Math.random() * questionCriteria.length)]]
   } piece of information that you want people to learn?`;
 
+  const skipBtn = document.getElementById("skipBtn");
+  skipBtn.href = `game.html?contentId=${contentId}&contributed=skipped`;
+
   const contentSelector = document.getElementById("contentSelector");
   contentSelector.innerHTML =
+    `<option value="choose">Choose Segment</option>` +
     contentSegments.reduce(
       (acc, curr) => `${acc}<option value="${curr}">${curr}</option>`,
       ""
-    ) + `<option value="other">Other</option>`;
+    ) +
+    `<option value="other">Other</option>`;
   const username = document.forms["questionEntry"]["username"];
   const submitBtn = document.forms["questionEntry"]["submitBtn"];
   const question = document.forms["questionEntry"]["question"];
@@ -32,23 +43,73 @@ d3.csv(
   const answer = document.forms["questionEntry"]["answer"];
   const segment = document.forms["questionEntry"]["contentSegment"];
   const open = document.forms["questionEntry"]["open"];
+  const questionBlock = document.getElementById("question");
+
   filledForm = () =>
     !(
       username.value &&
       answer.value !== "choose" &&
+      segment.value !== "choose" &&
       question.value &&
       choice1.value &&
       choice2.value &&
       choice3.value &&
       choice4.value
     );
+  let timeoutIteration = null;
+  const timeout = f => {
+    clearTimeout(timeoutIteration);
+
+    timeoutIteration = setTimeout(() => f(), 750);
+  };
   username.addEventListener("keyup", () => (submitBtn.disabled = filledForm()));
-  question.addEventListener("keyup", () => (submitBtn.disabled = filledForm()));
-  choice1.addEventListener("keyup", () => (submitBtn.disabled = filledForm()));
-  choice2.addEventListener("keyup", () => (submitBtn.disabled = filledForm()));
-  choice3.addEventListener("keyup", () => (submitBtn.disabled = filledForm()));
-  choice4.addEventListener("keyup", () => (submitBtn.disabled = filledForm()));
-  answer.onchange = () => (submitBtn.disabled = filledForm());
+  question.addEventListener("keyup", () => {
+    submitBtn.disabled = filledForm();
+    timeout(() => {
+      choice1.classList.remove("hidden");
+      choice2.classList.remove("hidden");
+      choice3.classList.remove("hidden");
+      choice4.classList.remove("hidden");
+    });
+  });
+
+  const choiceBoxesFilled = () => {
+    if (choice1.value && choice2.value && choice3.value && choice4.value) {
+      timeout(() => {
+        document.getElementById("answer").classList.remove("hidden");
+        document.getElementById("open").classList.remove("hidden");
+      });
+    }
+  };
+
+  choice1.addEventListener("keyup", () => {
+    submitBtn.disabled = filledForm();
+    choiceBoxesFilled();
+  });
+  choice2.addEventListener("keyup", () => {
+    submitBtn.disabled = filledForm();
+    choiceBoxesFilled();
+  });
+  choice3.addEventListener("keyup", () => {
+    submitBtn.disabled = filledForm();
+    choiceBoxesFilled();
+  });
+  choice4.addEventListener("keyup", () => {
+    submitBtn.disabled = filledForm();
+    choiceBoxesFilled();
+  });
+  answer.onchange = () => {
+    submitBtn.disabled = filledForm();
+    if (answer.value !== "choose") {
+      username.classList.remove("hidden");
+      submitBtn.classList.remove("hidden");
+    }
+  };
+
+  segment.onchange = () => {
+    submitBtn.disabled = filledForm();
+    if (segment.value !== "choose") questionBlock.classList.remove("hidden");
+  };
 
   saveQuestion = e => {
     e.preventDefault();
@@ -73,4 +134,5 @@ d3.csv(
       0
     );
   };
+  startForm();
 });

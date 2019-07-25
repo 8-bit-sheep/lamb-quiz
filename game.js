@@ -47,7 +47,7 @@ const startGame = () => {
     availableQuestions = [...questions];
     maxQuestions = 50;
     getNewQuestion();
-  } else {
+  } else if (contributed) {
     segmentBox.classList.remove("hidden");
     segmentSelector();
   }

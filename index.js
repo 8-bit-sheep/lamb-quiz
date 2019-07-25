@@ -6,9 +6,7 @@ d3.csv(
 ).then(data => {
   getData(data);
 });
-const contentTitles = [
-  ...new Set(questions.map(question => question.content))
-];
+const contentTitles = [...new Set(questions.map(question => question.content))];
 const getData = questions => {
   const contentTitles = [
     ...new Set(questions.map(question => question.content))
@@ -18,10 +16,10 @@ const getData = questions => {
     title: title,
     id: questions.filter(question => question.content === title)[0].contentId
   }));
-  createLinkBtn("All Content", 0);
   content.forEach(content => {
     createLinkBtn(content.title, content.id);
   });
+  createLinkBtn("All Content", 0);
 };
 
 const createLinkBtn = (text, id) => {
@@ -32,8 +30,8 @@ const createLinkBtn = (text, id) => {
   h4.innerText = text;
   const gameLink = document.createElement("a");
   div.appendChild(gameLink);
-  const buttonText = document.createElement("p")
-  gameLink.appendChild(buttonText)
+  const buttonText = document.createElement("p");
+  gameLink.appendChild(buttonText);
   buttonText.classList.add("btn-link");
   buttonText.innerText = "Play!";
   const gameHref = document.createAttribute("href");
@@ -42,8 +40,8 @@ const createLinkBtn = (text, id) => {
   const highScoreLink = document.createElement("a");
   //highScoreLink.classList.add("btn-gamelink");
   div.appendChild(highScoreLink);
-  const hsbuttonText = document.createElement("p")
-  highScoreLink.appendChild(hsbuttonText)
+  const hsbuttonText = document.createElement("p");
+  highScoreLink.appendChild(hsbuttonText);
   hsbuttonText.classList.add("btn-link");
 
   const highScoreHref = document.createAttribute("href");
