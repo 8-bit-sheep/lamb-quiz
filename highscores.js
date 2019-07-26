@@ -17,7 +17,7 @@ d3.csv(
     .filter(x => x === params.score).length;
   if ((exists === 0) & params.name) ranking.push(params);
   ranking = ranking
-    .sort((a, b) => parseInt(b.score) > parseInt(a.score))
+    .sort((a, b) => parseInt(b.score) - parseInt(a.score))
     .slice(0, 10);
   const highscoreList = document.getElementById("highscoreList");
   let contentName = document.getElementById("contentName");
@@ -32,6 +32,7 @@ d3.csv(
     )}</th><th class="highscoreScores">${row.score}</th></tr>`
     )
     .join("");
+  globalData = highscores;
 
   d3.csv(
     "https://docs.google.com/spreadsheets/d/e/2PACX-1vSfBk-rwrIauBPn7iuoLXBxP2sSYOXRYCbJ2GflzSK6wxGVGDr_fAqORJ0JWPdajFLxnGegmrlI26HB/pub?output=csv"

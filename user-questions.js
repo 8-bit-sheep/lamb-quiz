@@ -18,7 +18,7 @@ d3.csv(
   //<a href="https://youtu.be/KN8YgJnShPM">jeeeeet</a>;
   const briefText = document.getElementById("brief");
   const questionCriteria = ["significant", "interesting", "surprising"];
-  briefText.innerHTML = `Before we start, please contribute one question about <a href="${urlLink}" target="_blank"> ${contentName}</a>. What is the most ${
+  briefText.innerHTML = `I hear and forget. I see and I remember. I do and I understand. To start the game, please contribute one question about <a href="${urlLink}" target="_blank"> ${contentName}</a>. What is the most ${
     questionCriteria[[Math.floor(Math.random() * questionCriteria.length)]]
   } piece of information that you want people to learn?`;
 
