@@ -32,7 +32,7 @@ const saveHighscore = e => {
           "&score=" +
           mostRecentScore
       ),
-    0
+    50
   );
 };
 
