@@ -44,6 +44,10 @@ h4 {
   font-weight: 500;
 }
 
+.linkBtn {
+  font-size: 1.8rem;
+}
+
 /* utilities */
 
 .container {
@@ -133,53 +137,67 @@ input::placeholder {
 }
 
 .window-column {
-    columns: 1 auto;
-    width: 100%;
+  columns: 1 auto;
+  width: 100%;
 }
 
 @media (min-width: 51rem) {
-    .window-column {
-        columns: 2 auto;
-        width: 100%;
-    }
+  .window-column {
+    columns: 2 auto;
+    width: 100%;
+  }
 }
 
 .content-container a {
-    text-decoration: none;
-    border: 0.1rem solid rgba(123, 173, 182, 0.5);
-    padding: 0.75rem;
-    margin: 0.75rem;
-    margin-left: 0rem;
-    width: 20rem;
-    text-align: center;
-    font-size: 1.4rem;
-    color: #fff;
-    background-color: #7badb6;
-
+  text-decoration: none;
+  border: 0.1rem solid rgba(123, 173, 182, 0.5);
+  padding: 0.75rem;
+  margin: 0.75rem;
+  margin-left: 0rem;
+  width: 20rem;
+  text-align: center;
+  font-size: 1.4rem;
+  color: #fff;
+  background-color: #7badb6;
 }
 
 .content-container {
-    display: flex;
-    margin: 0.25rem 0;
-    width: 100%;
-    border: 0.1rem solid #7badb6;
-    background-color: white;
+  display: flex;
+  margin: 0.25rem 0;
+  width: 100%;
+  border: 0.1rem solid #7badb6;
+  background-color: white;
 }
 
 .content-container h4 {
-    padding: 1rem;
-    width: 100%;
-    color: #a9431e;
+  padding: 1rem;
+  width: 100%;
+  color: #a9431e;
 }
 
 .btn-link {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    flex-direction: column;
-    height: 100%;
-    
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  flex-direction: column;
+  height: 100%;
 }
 
+#loader {
+  border: 1.6rem solid white;
+  border-top: 1.6rem solid #7badb6;
+  border-radius: 50%;
+  width: 12rem;
+  height: 12rem;
+  animation: spin 1s linear infinite;
+}
 
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
