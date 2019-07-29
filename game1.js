@@ -190,3 +190,5 @@ d3.csv(
   });
   startGame();
 });
+
+//compare with game.js
