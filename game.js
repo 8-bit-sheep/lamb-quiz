@@ -20,6 +20,10 @@ const contentId = params.contentId;
 const contributed = params.contributed;
 const segmentBox = document.getElementById("segment-index");
 const segmentButtons = document.getElementById("segment-buttons");
+const choiceBox = document.getElementById("choice-box");
+const answerForm = document.getElementById("answer-form");
+const saveAnswerBtn = document.getElementById("saveAnswerButton");
+const answer = document.getElementById("answer");
 
 // state
 let currentQuestion = {};
@@ -121,10 +125,27 @@ const getNewQuestion = () => {
   contentNameText.innerText = currentQuestion.content;
   question.innerText = currentQuestion.question;
   urlNameText.href = currentQuestion.url;
-  choices.forEach(choice => {
-    const number = choice.dataset["number"];
-    choice.innerText = currentQuestion["choice" + number];
-  });
+
+  if (currentQuestion.open === "TRUE") {
+    answerForm.classList.remove("hidden");
+    choiceBox.classList.add("hidden");
+    answer.addEventListener(
+      "keyup",
+      () => (saveAnswerBtn.disabled = !answer.value)
+    );
+    saveAnswerBtn.addEventListener("click", e => {
+      e.preventDefault();
+      console.log(
+        answer.value === currentQuestion["choice" + currentQuestion.answer]
+      );
+      getNewQuestion();
+    });
+  } else {
+    choices.forEach(choice => {
+      const number = choice.dataset["number"];
+      choice.innerText = currentQuestion["choice" + number];
+    });
+  }
 
   availableQuestions.splice(questionIndex, 1);
   acceptingAnswers = true;
