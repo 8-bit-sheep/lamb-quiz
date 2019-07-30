@@ -21,9 +21,10 @@ const contributed = params.contributed;
 const segmentBox = document.getElementById("segment-index");
 const segmentButtons = document.getElementById("segment-buttons");
 const choiceBox = document.getElementById("choice-box");
-const answerForm = document.getElementById("answer-form");
+const openAnswerForm = document.getElementById("answer-form");
 const saveAnswerBtn = document.getElementById("saveAnswerButton");
-const answer = document.getElementById("answer");
+const openAnswerInput = document.getElementById("answer");
+const correctAnswerBox = document.getElementById("correct-answer-box");
 
 // state
 let currentQuestion = {};
@@ -127,18 +128,16 @@ const getNewQuestion = () => {
   urlNameText.href = currentQuestion.url;
 
   if (currentQuestion.open === "TRUE") {
-    answerForm.classList.remove("hidden");
+    openAnswerForm.classList.remove("hidden");
     choiceBox.classList.add("hidden");
-    answer.addEventListener(
+    openAnswerInput.addEventListener(
       "keyup",
-      () => (saveAnswerBtn.disabled = !answer.value)
+      () => (saveAnswerBtn.disabled = !openAnswerInput.value)
     );
     saveAnswerBtn.addEventListener("click", e => {
       e.preventDefault();
-      console.log(
-        answer.value === currentQuestion["choice" + currentQuestion.answer]
-      );
-      getNewQuestion();
+      checkOpenAnswer(openAnswerInput.value);
+      console.log(classToApply);
     });
   } else {
     choices.forEach(choice => {
@@ -149,6 +148,39 @@ const getNewQuestion = () => {
 
   availableQuestions.splice(questionIndex, 1);
   acceptingAnswers = true;
+};
+
+checkOpenAnswer = textInput => {
+  const classToApply =
+    textInput === currentQuestion["choice" + currentQuestion.answer]
+      ? "correct"
+      : "incorrect";
+
+  if (classToApply === "correct") {
+    incrementScore(CORRECT_BONUS);
+  }
+  openAnswerInput.classList.add(classToApply);
+
+  if (classToApply === "correct") {
+    setTimeout(() => {
+      openAnswerInput.classList.remove(classToApply);
+      openAnswerInput.value = "";
+      getNewQuestion();
+    }, 500);
+  } else {
+    acceptingAnswers = false;
+    wrongOpenAnswer();
+  }
+};
+
+wrongOpenAnswer = () => {
+  setTimeout(() => {
+    correctAnswerBox.innerText = `Correct Answer: ${
+      currentQuestion["choice" + currentQuestion.answer]
+    }`;
+    correctAnswerBox.classList.remove("hidden");
+    continueToNext = true;
+  }, 500);
 };
 
 const wrongAnswer = () => {
@@ -168,6 +200,9 @@ const continueGame = () => {
       choice.parentElement.classList.remove(["incorrect"]);
       choice.parentElement.classList.remove(["correct"]);
     });
+    correctAnswerBox.classList.add("hidden");
+    openAnswerInput.classList.remove("incorrect");
+    openAnswerInput.value = "";
     getNewQuestion();
   } else return;
 };
