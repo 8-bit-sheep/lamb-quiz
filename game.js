@@ -20,6 +20,12 @@ const contentId = params.contentId;
 const contributed = params.contributed;
 const segmentBox = document.getElementById("segment-index");
 const segmentButtons = document.getElementById("segment-buttons");
+const choiceBox = document.getElementById("choice-box");
+const openAnswerForm = document.getElementById("answer-form");
+const saveAnswerBtn = document.getElementById("saveAnswerButton");
+const openAnswerInput = document.getElementById("answer");
+const correctAnswerBox = document.getElementById("correct-answer-box");
+const redAnswer = document.getElementById("red-answer");
 
 // state
 let currentQuestion = {};
@@ -121,13 +127,74 @@ const getNewQuestion = () => {
   contentNameText.innerText = currentQuestion.content;
   question.innerText = currentQuestion.question;
   urlNameText.href = currentQuestion.url;
-  choices.forEach(choice => {
-    const number = choice.dataset["number"];
-    choice.innerText = currentQuestion["choice" + number];
-  });
+
+  if (currentQuestion.open === "TRUE") {
+    openAnswerForm.classList.remove("hidden");
+    choiceBox.classList.add("hidden");
+    openAnswerInput.addEventListener(
+      "keyup",
+      () => (saveAnswerBtn.disabled = !openAnswerInput.value)
+    );
+    saveAnswerBtn.addEventListener("click", e => {
+      if (!acceptingAnswers) return;
+      acceptingAnswers = false;
+      e.preventDefault();
+      checkOpenAnswer(openAnswerInput.value);
+    });
+  } else {
+    choiceBox.classList.remove("hidden");
+    choices.forEach(choice => {
+      const number = choice.dataset["number"];
+      choice.innerText = currentQuestion["choice" + number];
+    });
+  }
 
   availableQuestions.splice(questionIndex, 1);
   acceptingAnswers = true;
+};
+let classToApply;
+checkOpenAnswer = textInput => {
+  if (currentQuestion.exactMatch === "TRUE") {
+    classToApply =
+      textInput === currentQuestion["choice" + currentQuestion.answer]
+        ? "correct"
+        : "incorrect";
+  } else {
+    lowerCaseInput = textInput.toLowerCase().split(" ");
+    lowerCaseAnswer = currentQuestion["choice" + currentQuestion.answer]
+      .toLowerCase()
+      .split(" ");
+    console.log(lowerCaseInput);
+    classToApply =
+      lowerCaseInput
+        .map(word => lowerCaseAnswer.indexOf(word))
+        .filter(b => b !== -1).length > 0
+        ? "correct"
+        : "incorrect";
+  }
+  if (classToApply === "correct") {
+    incrementScore(CORRECT_BONUS);
+  }
+  openAnswerInput.classList.add(classToApply);
+  acceptingAnswers = false;
+  if (classToApply === "correct") {
+    setTimeout(() => {
+      openAnswerInput.classList.remove(classToApply);
+      openAnswerInput.value = "";
+      openAnswerForm.classList.add("hidden");
+      getNewQuestion();
+    }, 500);
+  } else {
+    wrongOpenAnswer();
+  }
+};
+
+wrongOpenAnswer = () => {
+  setTimeout(() => {
+    redAnswer.innerText = currentQuestion["choice" + currentQuestion.answer];
+    correctAnswerBox.classList.remove("hidden");
+    continueToNext = true;
+  }, 500);
 };
 
 const wrongAnswer = () => {
@@ -147,6 +214,10 @@ const continueGame = () => {
       choice.parentElement.classList.remove(["incorrect"]);
       choice.parentElement.classList.remove(["correct"]);
     });
+    correctAnswerBox.classList.add("hidden");
+    openAnswerForm.classList.add("hidden");
+    openAnswerInput.classList.remove("incorrect");
+    openAnswerInput.value = "";
     getNewQuestion();
   } else return;
 };
@@ -179,6 +250,7 @@ const keyboardMap = {
 };
 
 const keypress = kp => {
+  if (currentQuestion.open === "TRUE") return;
   if (!acceptingAnswers | continueToNext) {
     continueGame();
   } else {
@@ -198,7 +270,7 @@ document.body.addEventListener("click", e => continueGame());
 choices.forEach(choice => {
   choice.addEventListener("click", e => {
     if (!acceptingAnswers | continueToNext) return;
-    acceptinganswers = false;
+    acceptingAnswers = false;
     const selectedChoice = e.target;
     const selectedAnswer = selectedChoice.dataset["number"];
     checkChoice(selectedAnswer, selectedChoice);

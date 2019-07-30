@@ -1,10 +1,10 @@
 .choice-container {
-    display: flex;
-    margin-bottom: 0.5rem;
-    width: 100%;
-    font-size: 1.8rem;
-    border: 0.1rem solid #7badb6;
-    background-color: white;
+  display: flex;
+  margin-bottom: 0.5rem;
+  width: 100%;
+  font-size: 1.8rem;
+  border: 0.1rem solid #7badb6;
+  background-color: white;
 }
 
 .choice-text {
@@ -50,10 +50,10 @@
 }
 
 .episode-info {
-    width: 100%;
-    padding: 1rem 2rem;
-    text-align: center;
-    font-family: "Times New Roman", Times, serif;
+  width: 100%;
+  padding: 1rem 2rem;
+  text-align: center;
+  font-family: "Times New Roman", Times, serif;
 }
 
 #episodeName:hover {
@@ -91,30 +91,36 @@
 
 .segment-btn,
 .all-btn {
-    font-size: 1.8rem;
-    font-weight: 500;
-    background-color: white;
-    border: 0.1rem solid #7badb6;
-    box-shadow: none;
-    color: #a9431e;
-    padding: 1rem;
-    width: 100%;
-    text-align: left;
+  font-size: 1.8rem;
+  font-weight: 500;
+  background-color: white;
+  border: 0.1rem solid #7badb6;
+  box-shadow: none;
+  color: #a9431e;
+  padding: 1rem;
+  width: 100%;
+  text-align: left;
 }
 
 .segment-btn {
-    margin-top: 0.25rem;
+  margin-top: 0.25rem;
 }
 
 #all-btns {
-    padding: 0rem;
-    border-width: 0rem;
-    list-style: none;
-    margin-bottom: 1rem;
-    width: 100%;
+  padding: 0rem;
+  border-width: 0rem;
+  list-style: none;
+  margin-bottom: 1rem;
+  width: 100%;
 }
 
 .segment-btn:hover {
-    color: #a9431e;
+  color: #a9431e;
 }
-
+#red-answer {
+  color: red;
+}
+#correct-answer-box {
+  font-size: 1.8rem;
+  font-weight: 500;
+}
