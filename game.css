@@ -117,3 +117,10 @@
 .segment-btn:hover {
   color: #a9431e;
 }
+#red-answer {
+  color: red;
+}
+#correct-answer-box {
+  font-size: 1.8rem;
+  font-weight: 500;
+}

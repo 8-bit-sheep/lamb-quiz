@@ -25,6 +25,7 @@ const openAnswerForm = document.getElementById("answer-form");
 const saveAnswerBtn = document.getElementById("saveAnswerButton");
 const openAnswerInput = document.getElementById("answer");
 const correctAnswerBox = document.getElementById("correct-answer-box");
+const redAnswer = document.getElementById("red-answer");
 
 // state
 let currentQuestion = {};
@@ -135,11 +136,13 @@ const getNewQuestion = () => {
       () => (saveAnswerBtn.disabled = !openAnswerInput.value)
     );
     saveAnswerBtn.addEventListener("click", e => {
+      if (!acceptingAnswers) return;
+      acceptingAnswers = false;
       e.preventDefault();
       checkOpenAnswer(openAnswerInput.value);
-      console.log(classToApply);
     });
   } else {
+    choiceBox.classList.remove("hidden");
     choices.forEach(choice => {
       const number = choice.dataset["number"];
       choice.innerText = currentQuestion["choice" + number];
@@ -149,35 +152,46 @@ const getNewQuestion = () => {
   availableQuestions.splice(questionIndex, 1);
   acceptingAnswers = true;
 };
-
+let classToApply;
 checkOpenAnswer = textInput => {
-  const classToApply =
-    textInput === currentQuestion["choice" + currentQuestion.answer]
-      ? "correct"
-      : "incorrect";
-
+  if (currentQuestion.exactMatch === "TRUE") {
+    classToApply =
+      textInput === currentQuestion["choice" + currentQuestion.answer]
+        ? "correct"
+        : "incorrect";
+  } else {
+    lowerCaseInput = textInput.toLowerCase().split(" ");
+    lowerCaseAnswer = currentQuestion["choice" + currentQuestion.answer]
+      .toLowerCase()
+      .split(" ");
+    console.log(lowerCaseInput);
+    classToApply =
+      lowerCaseInput
+        .map(word => lowerCaseAnswer.indexOf(word))
+        .filter(b => b !== -1).length > 0
+        ? "correct"
+        : "incorrect";
+  }
   if (classToApply === "correct") {
     incrementScore(CORRECT_BONUS);
   }
   openAnswerInput.classList.add(classToApply);
-
+  acceptingAnswers = false;
   if (classToApply === "correct") {
     setTimeout(() => {
       openAnswerInput.classList.remove(classToApply);
       openAnswerInput.value = "";
+      openAnswerForm.classList.add("hidden");
       getNewQuestion();
     }, 500);
   } else {
-    acceptingAnswers = false;
     wrongOpenAnswer();
   }
 };
 
 wrongOpenAnswer = () => {
   setTimeout(() => {
-    correctAnswerBox.innerText = `Correct Answer: ${
-      currentQuestion["choice" + currentQuestion.answer]
-    }`;
+    redAnswer.innerText = currentQuestion["choice" + currentQuestion.answer];
     correctAnswerBox.classList.remove("hidden");
     continueToNext = true;
   }, 500);
@@ -201,6 +215,7 @@ const continueGame = () => {
       choice.parentElement.classList.remove(["correct"]);
     });
     correctAnswerBox.classList.add("hidden");
+    openAnswerForm.classList.add("hidden");
     openAnswerInput.classList.remove("incorrect");
     openAnswerInput.value = "";
     getNewQuestion();
@@ -235,6 +250,7 @@ const keyboardMap = {
 };
 
 const keypress = kp => {
+  if (currentQuestion.open === "TRUE") return;
   if (!acceptingAnswers | continueToNext) {
     continueGame();
   } else {
@@ -254,7 +270,7 @@ document.body.addEventListener("click", e => continueGame());
 choices.forEach(choice => {
   choice.addEventListener("click", e => {
     if (!acceptingAnswers | continueToNext) return;
-    acceptinganswers = false;
+    acceptingAnswers = false;
     const selectedChoice = e.target;
     const selectedAnswer = selectedChoice.dataset["number"];
     checkChoice(selectedAnswer, selectedChoice);
