@@ -26,6 +26,14 @@ const saveAnswerBtn = document.getElementById("saveAnswerButton");
 const openAnswerInput = document.getElementById("answer");
 const correctAnswerBox = document.getElementById("correct-answer-box");
 const redAnswer = document.getElementById("red-answer");
+const improvementBtn = document.getElementById("improvement-btn");
+const improvementForm = document.getElementById("improvement-form");
+const exitImprovement = document.getElementById("exit-improvement");
+const usernameInput = document.getElementById("username-input");
+const feedback = document.getElementById("improvement-input");
+const emailInput = document.getElementById("email-input");
+const saveImprovementBtn = document.getElementById("save-improvement-button");
+const improvementThnx = document.getElementById("improvement-thnx");
 
 // state
 let currentQuestion = {};
@@ -107,6 +115,7 @@ const startSegmentGame = e => {
 };
 
 const getNewQuestion = () => {
+  improvementBtn.classList.remove("hidden");
   continueToNext = false;
   if (availableQuestions.length === 0 || questionCounter > maxQuestions - 1) {
     localStorage.setItem("mostRecentScore", score);
@@ -250,7 +259,7 @@ const keyboardMap = {
 };
 
 const keypress = kp => {
-  if (currentQuestion.open === "TRUE") return;
+  if (currentQuestion.open === "TRUE" || !keyboardMap[kp]) return;
   if (!acceptingAnswers | continueToNext) {
     continueGame();
   } else {
@@ -280,6 +289,47 @@ choices.forEach(choice => {
 const incrementScore = num => {
   score += num;
   scoreText.innerText = score;
+};
+
+improvementBtn.addEventListener("click", e => {
+  improvementForm.classList.remove("hidden");
+  exitImprovement.classList.remove("hidden");
+});
+
+exitImprovement.addEventListener("click", e => {
+  improvementForm.classList.add("hidden");
+  exitImprovement.classList.add("hidden");
+});
+
+filledForm = () => !(usernameInput.value && feedback.value && emailInput.value);
+usernameInput.addEventListener(
+  "keyup",
+  () => (saveImprovementBtn.disabled = filledForm())
+);
+emailInput.addEventListener(
+  "keyup",
+  () => (saveImprovementBtn.disabled = filledForm())
+);
+feedback.addEventListener(
+  "keyup",
+  () => (saveImprovementBtn.disabled = filledForm())
+);
+
+saveImprovement = e => {
+  e.preventDefault();
+  const saveImprovementUrl = `https://script.google.com/macros/s/AKfycbwXBGlvexKjpcZ9ccWN3o4lrm4_DnKvTuTYfHE2o7_QmrgcveDf/exec?nickname=${
+    usernameInput.value
+  }&feedback=${feedback.value}&question=${currentQuestion.question}&email=${
+    emailInput.value
+  }`;
+  fetch(saveImprovementUrl);
+  improvementForm.classList.add("hidden");
+  exitImprovement.classList.add("hidden");
+  improvementBtn.classList.add("hidden");
+  improvementThnx.classList.remove("hidden");
+  setTimeout(() => {
+    improvementThnx.classList.add("hidden");
+  }, 4000);
 };
 
 d3.csv(
