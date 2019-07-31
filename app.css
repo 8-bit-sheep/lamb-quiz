@@ -108,7 +108,8 @@ h4 {
   transform: translateY(-0.1rem);
   transition: transform 150ms;
 }
-.btn[disabled]:hover {
+.btn[disabled]:hover,
+#save-improvement-button[disabled]:hover {
   cursor: not-allowed;
   box-shadow: none;
   transform: none;

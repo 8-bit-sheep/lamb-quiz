@@ -124,3 +124,65 @@
   font-size: 1.8rem;
   font-weight: 500;
 }
+input {
+}
+#improvement-input {
+  height: 10rem;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+#username-input {
+  margin-right: 2rem;
+}
+
+#email-input,
+#username-input {
+  font-size: 1.2rem;
+}
+
+#save-improvement-button,
+#improvement-btn {
+  width: 10rem;
+  height: 3rem;
+  background-color: white;
+  border-radius: 0.7rem;
+  color: #7badb6;
+  border: 0.1rem solid #7badb6;
+  font-size: 1.4rem;
+}
+#personal-info {
+  width: 100%;
+}
+#improvement-form {
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+#improvement-btn {
+  width: 20rem;
+  font-size: 1.2rem;
+  height: 2rem;
+  margin-bottom: 1.7rem;
+}
+#exit-improvement {
+  position: relative;
+  z-index: 2;
+  left: -20.3rem;
+  top: 3.4rem;
+  box-shadow: 0 0.2rem 0.4rem 0 rgba(123, 173, 182, 0.5);
+}
+#improvement-thnx {
+  color: #a9431e;
+  animation: fade 1.5s ease-out 2.6s;
+}
+
+@keyframes fade {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}

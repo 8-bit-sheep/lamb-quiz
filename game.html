@@ -70,6 +70,47 @@
                                     <span id="red-answer"></span>
                                 </div>
                             </form>
+                            <button id="improvement-btn" class= "hidden">This question needs improvement</button>
+                            <button            
+                                    class="hidden"
+                                    id="exit-improvement"
+                                >X</button>
+                            <form id="improvement-form" class="hidden">
+                                    
+                                <input
+                                type="text"
+                                name="improvement"
+                                id="improvement-input"
+                                placeholder="How could this question be improved?"
+                                />
+                                
+                                <div id="personal-info">
+                                    <input
+                                    type="text"
+                                    name="username"
+                                    id="username-input"
+                                    placeholder="Name"
+                                    />
+                                    <input
+                                    type="text"
+                                    name="email"
+                                    id="email-input"
+                                    placeholder="Email"
+                                    />
+                                </div>
+                                
+                                <button            
+                                    type="submit"
+                                    class=""
+                                    id="save-improvement-button"
+                                    onclick="saveImprovement(event)"
+                                    disabled
+                                >
+                                    Submit
+                                </button>
+
+                            </form>
+                            <h4 id="improvement-thnx" class="hidden">Thank you for improving our application!:)</h4>
                         </div>
                     </div>
                 </div>
