@@ -1,0 +1,47 @@
+.questionEntry {
+  margin-bottom: 1rem;
+}
+#question {
+  width: 100%;
+}
+.choice-boxes {
+  width: 80%;
+}
+input {
+}
+.question-box {
+  height: 10rem;
+  width: 80%;
+}
+
+select {
+  font-size: 1.5rem;
+}
+
+option {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.checkbox {
+  box-shadow: none;
+
+  zoom: 1.3;
+  transform: scale(1.3);
+  -ms-transform: scale(1.3);
+  -webkit-transform: scale(1.3);
+  -o-transform: scale(1.3);
+  -moz-transform: scale(1.3);
+  transform-origin: 0.5 0.5;
+  -ms-transform-origin: 0.5 0.5;
+  -webkit-transform-origin: 0.5 0.5;
+  -o-transform-origin: 0.5 0.5;
+  -moz-transform-origin: 0.5 0.5;
+}
+
+#answer,
+#open,
+#contentSelector,
+#question {
+  margin-bottom: 1rem;
+}

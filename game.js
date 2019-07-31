@@ -1,3 +1,9 @@
+const parseUrlParameters = parameter =>
+  parameter //"?key1=value1&key2=value2&key3=value3"
+    .substr(1) //"key1=value1&key2=value2&key3=value3"
+    .split("&") //["key1=value1" "key2=value2" key3=value3"]
+    .map(el => el.split("=")) //[["key1" "value1"] ["key2" "value2"] [key3" "value3"]]
+    .reduce((acc, cur) => ({ ...acc, [cur[0]]: cur[1] }), {});
 // dom references
 
 const loader = document.getElementById("loader");
@@ -9,35 +15,53 @@ const scoreText = document.getElementById("score");
 const episodeNameText = document.getElementById("episodeName");
 const contentNameText = document.getElementById("contentName");
 const urlNameText = document.getElementById("episodeurl");
-const id = window.location.search.split("=")[1];
+const params = parseUrlParameters(window.location.search);
+const contentId = params.contentId;
+const contributed = params.contributed;
 const segmentBox = document.getElementById("segment-index");
 const segmentButtons = document.getElementById("segment-buttons");
+const choiceBox = document.getElementById("choice-box");
+const openAnswerForm = document.getElementById("answer-form");
+const saveAnswerBtn = document.getElementById("saveAnswerButton");
+const openAnswerInput = document.getElementById("answer");
+const correctAnswerBox = document.getElementById("correct-answer-box");
+const redAnswer = document.getElementById("red-answer");
+const improvementBtn = document.getElementById("improvement-btn");
+const improvementForm = document.getElementById("improvement-form");
+const exitImprovement = document.getElementById("exit-improvement");
+const usernameInput = document.getElementById("username-input");
+const feedback = document.getElementById("improvement-input");
+const emailInput = document.getElementById("email-input");
+const saveImprovementBtn = document.getElementById("save-improvement-button");
+const improvementThnx = document.getElementById("improvement-thnx");
 
 // state
 let currentQuestion = {};
 let acceptingAnswers = false;
+let continueToNext = false;
 let score = 0;
 let questionCounter = 0;
 let availableQuestions = [];
 let questions = [];
-let cont = false;
 let maxQuestions = 20;
 let isSegmentGame = false;
 
-// state
+// config
 const CORRECT_BONUS = 10;
 
 const startGame = () => {
+  if (!contributed && contentId !== "0")
+    window.location.assign("user-questions.html?contentId=" + contentId);
   questionCounter = 0;
   score = 0;
   scoreText.innerText = score;
   loader.classList.add("hidden");
-  if (id === "0") {
+  if (contentId === "0") {
     game.classList.remove("hidden");
     availableQuestions = [...questions];
     maxQuestions = 50;
     getNewQuestion();
-  } else {
+  } else if (contributed) {
     segmentBox.classList.remove("hidden");
     segmentSelector();
   }
@@ -65,12 +89,12 @@ const createButtonInsideListItem = (list, text) => {
   const button = document.createElement("button");
   li.appendChild(button);
   button.innerText = text;
-    if(text === "Play All!") {
-        button.classList.add("all-btn");
-    } else {
-        button.classList.add("segment-btn");        
-    }
-    button.addEventListener("click", startSegmentGame);
+  if (text === "Play All!") {
+    button.classList.add("all-btn");
+  } else {
+    button.classList.add("segment-btn");
+  }
+  button.addEventListener("click", startSegmentGame);
 };
 
 const startSegmentGame = e => {
@@ -91,13 +115,16 @@ const startSegmentGame = e => {
 };
 
 const getNewQuestion = () => {
-  cont = false;
+  improvementBtn.classList.remove("hidden");
+  continueToNext = false;
   if (availableQuestions.length === 0 || questionCounter > maxQuestions - 1) {
     localStorage.setItem("mostRecentScore", score);
     if (isSegmentGame === false) {
-      return window.location.assign("end.html?contentId=" + id + "&all=1");
+      return window.location.assign(
+        "end.html?contentId=" + contentId + "&all=1"
+      );
     } else {
-      return window.location.assign("end.html?contentId=" + id);
+      return window.location.assign("end.html?contentId=" + contentId);
     }
   }
 
@@ -109,13 +136,74 @@ const getNewQuestion = () => {
   contentNameText.innerText = currentQuestion.content;
   question.innerText = currentQuestion.question;
   urlNameText.href = currentQuestion.url;
-  choices.forEach(choice => {
-    const number = choice.dataset["number"];
-    choice.innerText = currentQuestion["choice" + number];
-  });
+
+  if (currentQuestion.open === "TRUE") {
+    openAnswerForm.classList.remove("hidden");
+    choiceBox.classList.add("hidden");
+    openAnswerInput.addEventListener(
+      "keyup",
+      () => (saveAnswerBtn.disabled = !openAnswerInput.value)
+    );
+    saveAnswerBtn.addEventListener("click", e => {
+      if (!acceptingAnswers) return;
+      acceptingAnswers = false;
+      e.preventDefault();
+      checkOpenAnswer(openAnswerInput.value);
+    });
+  } else {
+    choiceBox.classList.remove("hidden");
+    choices.forEach(choice => {
+      const number = choice.dataset["number"];
+      choice.innerText = currentQuestion["choice" + number];
+    });
+  }
 
   availableQuestions.splice(questionIndex, 1);
   acceptingAnswers = true;
+};
+let classToApply;
+checkOpenAnswer = textInput => {
+  if (currentQuestion.exactMatch === "TRUE") {
+    classToApply =
+      textInput === currentQuestion["choice" + currentQuestion.answer]
+        ? "correct"
+        : "incorrect";
+  } else {
+    lowerCaseInput = textInput.toLowerCase().split(" ");
+    lowerCaseAnswer = currentQuestion["choice" + currentQuestion.answer]
+      .toLowerCase()
+      .split(" ");
+    console.log(lowerCaseInput);
+    classToApply =
+      lowerCaseInput
+        .map(word => lowerCaseAnswer.indexOf(word))
+        .filter(b => b !== -1).length > 0
+        ? "correct"
+        : "incorrect";
+  }
+  if (classToApply === "correct") {
+    incrementScore(CORRECT_BONUS);
+  }
+  openAnswerInput.classList.add(classToApply);
+  acceptingAnswers = false;
+  if (classToApply === "correct") {
+    setTimeout(() => {
+      openAnswerInput.classList.remove(classToApply);
+      openAnswerInput.value = "";
+      openAnswerForm.classList.add("hidden");
+      getNewQuestion();
+    }, 500);
+  } else {
+    wrongOpenAnswer();
+  }
+};
+
+wrongOpenAnswer = () => {
+  setTimeout(() => {
+    redAnswer.innerText = currentQuestion["choice" + currentQuestion.answer];
+    correctAnswerBox.classList.remove("hidden");
+    continueToNext = true;
+  }, 500);
 };
 
 const wrongAnswer = () => {
@@ -125,45 +213,76 @@ const wrongAnswer = () => {
         choice.parentElement.classList.add("correct");
       }
     });
-    cont = true;
+    continueToNext = true;
   }, 200);
 };
 
 const continueGame = () => {
-  if (cont) {
+  if (continueToNext) {
     choices.forEach(choice => {
       choice.parentElement.classList.remove(["incorrect"]);
       choice.parentElement.classList.remove(["correct"]);
     });
+    correctAnswerBox.classList.add("hidden");
+    openAnswerForm.classList.add("hidden");
+    openAnswerInput.classList.remove("incorrect");
+    openAnswerInput.value = "";
     getNewQuestion();
   } else return;
 };
+
+checkChoice = (selectedAnswer, selectedChoice) => {
+  const classToApply =
+    selectedAnswer === currentQuestion.answer ? "correct" : "incorrect";
+
+  if (classToApply === "correct") {
+    incrementScore(CORRECT_BONUS);
+  }
+  selectedChoice.parentElement.classList.add(classToApply);
+
+  if (classToApply === "correct") {
+    setTimeout(() => {
+      selectedChoice.parentElement.classList.remove(classToApply);
+      getNewQuestion();
+    }, 500);
+  } else {
+    acceptingAnswers = false;
+    wrongAnswer();
+  }
+};
+
+const keyboardMap = {
+  49: "1",
+  50: "2",
+  51: "3",
+  52: "4"
+};
+
+const keypress = kp => {
+  if (currentQuestion.open === "TRUE" || !keyboardMap[kp]) return;
+  if (!acceptingAnswers | continueToNext) {
+    continueGame();
+  } else {
+    choices.forEach(choice => {
+      if (choice.dataset["number"] === keyboardMap[kp]) {
+        selectedChoice = choice;
+      }
+    });
+    checkChoice(keyboardMap[kp], selectedChoice);
+  }
+};
+
+document.onkeyup = e => keypress(e.which);
 
 document.body.addEventListener("click", e => continueGame());
 
 choices.forEach(choice => {
   choice.addEventListener("click", e => {
-    if (!acceptingAnswers | cont) return;
-    acceptinganswers = false;
+    if (!acceptingAnswers | continueToNext) return;
+    acceptingAnswers = false;
     const selectedChoice = e.target;
     const selectedAnswer = selectedChoice.dataset["number"];
-    const classToApply =
-      selectedAnswer === currentQuestion.answer ? "correct" : "incorrect";
-
-    if (classToApply === "correct") {
-      incrementScore(CORRECT_BONUS);
-    }
-    selectedChoice.parentElement.classList.add(classToApply);
-
-    if (classToApply === "correct") {
-      setTimeout(() => {
-        selectedChoice.parentElement.classList.remove(classToApply);
-        getNewQuestion();
-      }, 500);
-    } else {
-      acceptingAnswers = false;
-      wrongAnswer();
-    }
+    checkChoice(selectedAnswer, selectedChoice);
   });
 });
 
@@ -172,12 +291,53 @@ const incrementScore = num => {
   scoreText.innerText = score;
 };
 
+improvementBtn.addEventListener("click", e => {
+  improvementForm.classList.remove("hidden");
+  exitImprovement.classList.remove("hidden");
+});
+
+exitImprovement.addEventListener("click", e => {
+  improvementForm.classList.add("hidden");
+  exitImprovement.classList.add("hidden");
+});
+
+filledForm = () => !(usernameInput.value && feedback.value && emailInput.value);
+usernameInput.addEventListener(
+  "keyup",
+  () => (saveImprovementBtn.disabled = filledForm())
+);
+emailInput.addEventListener(
+  "keyup",
+  () => (saveImprovementBtn.disabled = filledForm())
+);
+feedback.addEventListener(
+  "keyup",
+  () => (saveImprovementBtn.disabled = filledForm())
+);
+
+saveImprovement = e => {
+  e.preventDefault();
+  const saveImprovementUrl = `https://script.google.com/macros/s/AKfycbwXBGlvexKjpcZ9ccWN3o4lrm4_DnKvTuTYfHE2o7_QmrgcveDf/exec?nickname=${
+    usernameInput.value
+  }&feedback=${feedback.value}&question=${currentQuestion.question}&email=${
+    emailInput.value
+  }`;
+  fetch(saveImprovementUrl);
+  improvementForm.classList.add("hidden");
+  exitImprovement.classList.add("hidden");
+  improvementBtn.classList.add("hidden");
+  improvementThnx.classList.remove("hidden");
+  setTimeout(() => {
+    improvementThnx.classList.add("hidden");
+  }, 4000);
+};
+
 d3.csv(
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vSfBk-rwrIauBPn7iuoLXBxP2sSYOXRYCbJ2GflzSK6wxGVGDr_fAqORJ0JWPdajFLxnGegmrlI26HB/pub?output=csv"
 ).then(data => {
   questions = data.filter(question => {
-    if (id === "0") return true;
-    else return question.contentId === id;
+    if (contentId === "0") return true;
+    else return question.contentId === contentId;
   });
   startGame();
 });

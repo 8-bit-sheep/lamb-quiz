@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Your Question</title>
+    <link rel="stylesheet" href="app.css" />
+    <link rel="stylesheet" href="user-questions.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div id="loader"></div>
+      <div id="contributionForm" class="flex-center flex-column hidden">
+        <h1>Your Question Contribution</h1>
+        <h3 id="brief"></h3>
+        <form name="questionEntry">
+          <h3>Choose segment</h3>
+          <select id="contentSelector" name="contentSegment"> </select>
+          <div id="question" class="hidden flex-center flex-column">
+            <h3>The question</h3>
+            <input
+              type="text"
+              name="question"
+              placeholder="Your Question"
+              class="question-box"
+            />
+          </div>
+          <input
+            type="text"
+            name="choice1"
+            placeholder="Choice 1"
+            id="choice1"
+            class="hidden choice-boxes"
+          />
+
+          <input
+            type="text"
+            name="choice2"
+            placeholder="Choice 2"
+            id="choice2"
+            class="hidden choice-boxes"
+          />
+          <input
+            type="text"
+            name="choice3"
+            placeholder="Choice 3"
+            id="choice3"
+            class="hidden choice-boxes"
+          />
+          <input
+            type="text"
+            name="choice4"
+            placeholder="Choice 4"
+            id="choice4"
+            class="hidden choice-boxes "
+          />
+          <div id="answer" class="hidden flex-center flex-column">
+            <h3>Indicate correct answer:</h3>
+            <select name="answer">
+              <option value="choose">Choose correct</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+            </select>
+          </div>
+          <div id="open" class="hidden flex-center flex-column">
+            <h3>Can be an open question?</h3>
+            <input type="checkbox" name="open" value="true" class="checkbox" />
+          </div>
+
+          <input
+            type="text"
+            name="username"
+            placeholder="Username"
+            id="username"
+            class="hidden"
+          />
+          <button
+            class="hidden btn"
+            type="submit"
+            value="Submit"
+            id="submitBtn"
+            onclick="saveQuestion(event)"
+            disabled
+          >
+            Submit
+          </button>
+        </form>
+        <a class="btn" href="index.html">Go Home</a>
+        <a class="linkBtn" id="skipBtn" href="url"
+          >Go directly to Quiz without contributing, asshole</a
+        >
+      </div>
+      <script src="https://d3js.org/d3.v5.min.js"></script>
+      <script src="user-questions.js"></script>
+    </div>
+  </body>
+</html>
