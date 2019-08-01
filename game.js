@@ -51,7 +51,7 @@ const startGame = () => {
   if (contentId === "0") {
     game.classList.remove("hidden");
     availableQuestions = [...questions];
-    maxQuestions = 50;
+    maxQuestions = 3;
     getNewQuestion();
   } else if (contributed) {
     segmentBox.classList.remove("hidden");

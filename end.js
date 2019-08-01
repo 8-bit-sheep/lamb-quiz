@@ -6,7 +6,7 @@ const parseUrlParameters = parameter =>
     .reduce((acc, cur) => ({ ...acc, [cur[0]]: cur[1] }), {});
 
 const username = document.getElementById("username");
-const finalScore = document.getElementById("finalScore");
+finalScore = document.getElementById("finalScore");
 const mostRecentScore = localStorage.getItem("mostRecentScore");
 const saveScoreBtn = document.getElementById("saveScoreButton");
 const urlParams = parseUrlParameters(window.location.search);
@@ -20,7 +20,7 @@ const saveHighscore = e => {
 
   const rankingUrl = `https://script.google.com/macros/s/AKfycbwdGGPzI9JdH_6FN-na4boXQNZmGyv6y_690ErJc0Xhzd_CQ4A_/exec?contentId=${
     urlParams.contentId
-  }&score=${mostRecentScore}&name=${username.value}`;
+  }&name=${username.value}&score=${mostRecentScore}`;
   fetch(rankingUrl);
   setInterval(
     () =>
