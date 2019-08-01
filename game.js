@@ -48,6 +48,7 @@ let isSegmentGame = false;
 
 // config
 const CORRECT_BONUS = 10;
+const OPEN_PROBABILITY = 0.5;
 
 const startGame = () => {
   if (!contributed && contentId !== "0")
@@ -137,7 +138,7 @@ const getNewQuestion = () => {
   question.innerText = currentQuestion.question;
   urlNameText.href = currentQuestion.url;
 
-  if (currentQuestion.open === "TRUE") {
+  if (currentQuestion.open === "TRUE" && Math.random() > OPEN_PROBABILITY) {
     openAnswerForm.classList.remove("hidden");
     choiceBox.classList.add("hidden");
     openAnswerInput.addEventListener(
@@ -145,9 +146,9 @@ const getNewQuestion = () => {
       () => (saveAnswerBtn.disabled = !openAnswerInput.value)
     );
     saveAnswerBtn.addEventListener("click", e => {
+      e.preventDefault();
       if (!acceptingAnswers) return;
       acceptingAnswers = false;
-      e.preventDefault();
       checkOpenAnswer(openAnswerInput.value);
     });
   } else {
