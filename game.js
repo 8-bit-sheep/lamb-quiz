@@ -136,9 +136,9 @@ const getNewQuestion = () => {
       () => (saveAnswerBtn.disabled = !openAnswerInput.value)
     );
     saveAnswerBtn.addEventListener("click", e => {
+      e.preventDefault();
       if (!acceptingAnswers) return;
       acceptingAnswers = false;
-      e.preventDefault();
       checkOpenAnswer(openAnswerInput.value);
     });
   } else {
