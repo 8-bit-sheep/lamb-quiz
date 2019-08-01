@@ -1,0 +1,12 @@
+#about-container {
+  margin: 10rem 10rem;
+}
+
+#headline {
+  display: flex;
+  justify-content: space-between;
+}
+
+.text {
+  font-size: 1.8rem;
+}

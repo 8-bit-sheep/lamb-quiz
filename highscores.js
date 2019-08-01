@@ -11,6 +11,7 @@ d3.csv(
   const params = parseUrlParameters(window.location.search);
   const id = params.contentId;
   let ranking = highscores.filter(x => x.contentId === id);
+
   let exists = ranking
     .filter(x => x.name === params.name)
     .map(y => y.score)
