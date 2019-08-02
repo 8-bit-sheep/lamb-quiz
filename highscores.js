@@ -11,7 +11,7 @@ d3.csv(
   const params = parseUrlParameters(window.location.search);
   const id = params.contentId;
   let ranking = highscores.filter(x => x.contentId === id);
-  ranking.push(params);
+ranking.push(params);
   ranking = [...new Set(ranking)]
     .sort((a, b) => parseInt(b.score) - parseInt(a.score))
     .slice(0, 10);

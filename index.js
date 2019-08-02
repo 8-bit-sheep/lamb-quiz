@@ -1,6 +1,16 @@
 const contentBox = document.getElementById("content-box");
 const home = document.getElementById("home");
+const d = new Date();
+const cookieString = `about=seen; expires=${d.setTime(
+  d.getTime() + 365 * 24 * 60 * 60 * 1000
+)}`;
+const cookie = document.cookie || "";
+console.log(cookie);
 let questions = [];
+if (!cookie && !window.location.search) {
+  document.cookie = cookieString;
+  window.location.assign("about.html");
+}
 d3.csv(
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vSfBk-rwrIauBPn7iuoLXBxP2sSYOXRYCbJ2GflzSK6wxGVGDr_fAqORJ0JWPdajFLxnGegmrlI26HB/pub?output=csv"
 ).then(data => {
