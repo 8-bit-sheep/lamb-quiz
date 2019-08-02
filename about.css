@@ -1,0 +1,72 @@
+#about-container {
+  width: 50rem;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 5rem;
+}
+
+#headline {
+  display: flex;
+
+  width: 50rem;
+}
+
+h1 {
+  color: #7badb6;
+}
+
+img {
+  display: block;
+  width: auto;
+  height: auto;
+}
+
+.text {
+  font-size: 1.8rem;
+  margin-bottom: 3rem;
+  width: 50rem;
+  z-index: 2;
+  position: relative;
+  top: -5.5rem;
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+#family-pic {
+  width: 50rem;
+  z-index: 1;
+}
+#sheep {
+  width: 30rem;
+  height: 17rem;
+}
+
+:root {
+  background-color: black;
+}
+
+* {
+  color: white;
+}
+
+#continue-btn {
+  background-color: #7badb6;
+  color: white;
+  width: 30rem;
+}
+
+#yle-logo {
+  width: 5rem;
+}
+
+#made-possible {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 10rem;
+}
