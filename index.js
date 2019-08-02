@@ -5,9 +5,9 @@ const cookieString = `about=seen; expires=${d.setTime(
   d.getTime() + 365 * 24 * 60 * 60 * 1000
 )}`;
 const cookie = document.cookie || "";
-
+console.log(cookie);
 let questions = [];
-if (!cookie) {
+if (!cookie && !window.location.search) {
   document.cookie = cookieString;
   window.location.assign("about.html");
 }
