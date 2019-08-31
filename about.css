@@ -42,8 +42,7 @@ img {
   z-index: 1;
 }
 #sheep {
-  width: 30rem;
-  height: 17rem;
+    width: 30rem;
 }
 
 :root {
